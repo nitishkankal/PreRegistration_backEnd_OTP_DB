@@ -1,0 +1,762 @@
+<%
+if (locals.action) {
+    // Make it possible to override action button color (specify fallback color if no color specified)
+    locals.action.forEach(function(actionItem) {
+        if (!actionItem.button.color) {
+            actionItem.button.color = '#222222';
+        }
+    });
+}
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8"> <!-- utf-8 works for most cases -->
+	<meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+	<title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- Web Font / @font-face : BEGIN -->
+	<!-- NOTE: If web fonts are not required, lines 9 - 26 can be safely removed. -->
+
+	<!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
+	<!--[if mso]>
+		<style>
+			* {
+				font-family: sans-serif !important;
+			}
+		</style>
+	<![endif]-->
+
+	<!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
+	<!--[if !mso]><!-->
+		<!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+	<!--<![endif]-->
+
+	<!-- Web Font / @font-face : END -->
+
+  	<!-- CSS Reset -->
+    <style type="text/css">
+
+		/* What it does: Remove spaces around the email design added by some email clients. */
+		/* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+        html,
+        body {
+	        margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        /* What it does: Stops email clients resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            font-family: sans-serif;
+        }
+
+        /* What is does: Centers email on Android 4.4 */
+        div[style*="margin: 16px 0"] {
+            margin:0 !important;
+        }
+
+        /* What it does: Stops Outlook from adding extra spacing to tables. */
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the first 2 tables then removes for anything nested deeper. */
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            Margin: 0 auto !important;
+        }
+        table table table {
+            table-layout: auto;
+        }
+
+        /* What it does: Uses a better rendering method when resizing images in IE. */
+        img {
+            -ms-interpolation-mode:bicubic;
+        }
+
+        .branding {
+            color: #fff;
+            font-size: 25px;
+            font-family: sans-serif;
+        }
+
+        .branding a {
+            color: #fff;
+            text-decoration:none;
+        }
+
+        .copyright a {
+            color:#888888;
+            text-decoration:underline;
+        }
+
+        .email-logo {
+            max-height: 50px;
+        }
+
+        /* What it does: Overrides styles added when Yahoo's auto-senses a link. */
+        .yshortcuts a {
+            border-bottom: none !important;
+        }
+
+        /* What it does: A work-around for iOS meddling in triggered links. */
+        .mobile-link--footer a,
+        a[x-apple-data-detectors] {
+            color:inherit !important;
+            text-decoration: underline !important;
+        }
+
+        /* Dictionary */
+        .dictionary {
+        width: 100%;
+        overflow: hidden;
+        margin: 0 auto;
+        padding: 0;
+        }
+        .dictionary dt {
+        clear: both;
+        color: #000;
+        font-weight: bold;
+        margin-right: 4px;
+        }
+        .dictionary dd {
+        margin: 0 0 10px 0;
+        }
+
+        /* Table */
+        .data-wrapper {
+            width: 100%;
+            margin: 0;
+            padding: 35px 0;
+        }
+        .data-table {
+            width: 100%;
+            margin: 0;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 0px 5px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #DEDEDE;
+        }
+        .data-table th p {
+            margin: 0;
+            font-size: 12px;
+        }
+        .data-table td {
+            text-align: left;
+            padding: 10px 5px;
+            font-size: 15px;
+            line-height: 18px;
+        }
+
+        /* Button */
+        .button-td {
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .button-a {
+            border-radius: 3px;
+            display: block;
+            font-family: sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 1.1;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+    </style>
+
+    <!-- Progressive Enhancements -->
+    <style>
+
+        /* What it does: Hover styles for buttons */
+        .button-td,
+        .button-a {
+            transition: all 100ms ease-in;
+        }
+        .button-td:hover,
+        .button-a:hover {
+            background: #555555 !important;
+            border-color: #555555 !important;
+        }
+
+    </style>
+
+</head>
+<body width="100%" bgcolor="#222222" style="Margin: 0;" dir="<%- textDirection %>">
+    <center style="width: 100%; background: #222222;">
+
+        <!--
+            Set the email width. Defined in two places:
+            1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 600px.
+            2. MSO tags for Desktop Windows Outlook enforce a 600px width.
+        -->
+        <div style="max-width: 600px; margin: auto;">
+            <!--[if (gte mso 9)|(IE)]>
+            <table cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+            <tr>
+            <td>
+            <![endif]-->
+
+            <!-- Email Header : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+				<tr>
+					<td class="branding" style="padding: 30px 0; text-align: center">
+                        <a href="<%- product.link %>" target="_blank">
+                            <% if (locals.product.logo) { %>
+                                <img src="<%- product.logo %>" class="email-logo" />
+                            <% } else { %>
+                                <%- product.name %>
+                            <% } %>
+                        </a>
+					</td>
+				</tr>
+            </table>
+            <!-- Email Header : END -->
+
+            <!-- Email Body : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="#ffffff" width="100%" style="max-width: 600px;">
+
+                <!-- Hero Image, Flush : BEGIN -->
+                <tr>
+					<td>
+						<h3 style="font-family: sans-serif; font-size: 26px; padding: 40px 10px 0; text-align: center;">
+                            <%- title %>
+                        </h3>
+					</td>
+                </tr>
+                <!-- Hero Image, Flush : END -->
+
+                <!-- 1 Column Text + Button : BEGIN -->
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                        	<tr>
+	                            <td style="text-align: center; padding: 10px 40px 40px 40px; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+	                                <% if (locals.intro) { %>
+                                        <% intro.forEach(function (introItem) { -%>
+                                            <p><%- introItem %></p>
+                                        <% }) -%>
+                                    <% } %>
+
+                                    <!-- Dictionary -->
+                                    <% if (locals.dictionary) { %>
+                                        <br />
+                                        <dl class="dictionary">
+                                        <% for (item in dictionary) { -%>
+                                            <dt><%- item.charAt(0).toUpperCase() + item.slice(1) %>:</dt>
+                                            <dd><%- dictionary[item] %></dd>
+                                        <% } -%>
+                                        </dl>
+                                        <br />
+                                    <% } %>
+
+                                    <!-- Table -->
+                                    <% if (locals.table) { %>
+                                    <br />
+                                    <table class="data-table" width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <% for (var column in table.data[0]) {%>
+                                            <th
+                                                <% if(locals.table.columns && locals.table.columns.customWidth && locals.table.columns.customWidth[column]) { %>
+                                                    width="<%= table.columns.customWidth[column] %>"
+                                                <% } %>
+                                                <% if(locals.table.columns && locals.table.columns.customAlignment && locals.table.columns.customAlignment[column]) { %>
+                                                    style="text-align:<%= table.columns.customAlignment[column] %>"
+                                                <% } %>
+                                            >
+                                                <p><%- column.charAt(0).toUpperCase() + column.slice(1) %></p>
+                                            </th>
+                                            <% } %>
+                                        </tr>
+                                        <% for (var i in table.data) {%>
+                                        <tr>
+                                            <% for (var column in table.data[i]) {%>
+                                            <td
+                                                <% if(locals.table.columns && locals.table.columns.customAlignment && locals.table.columns.customAlignment[column]) { %>
+                                                    style="text-align:<%= table.columns.customAlignment[column] %>"
+                                                <% } %>
+                                            >
+                                                <%- table.data[i][column] %>
+                                            </td>
+                                            <% } %>
+                                        </tr>
+                                        <% } %>
+                                    </table>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+               
+                <tr>
+                    <td>
+                      <!-- ---------------------------------------------------------------------------------- -->
+
+                      <table class="es-wrapper" width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;"> 
+                          <tr style="border-collapse:collapse;"> 
+                           <td valign="top" style="padding:0;Margin:0;"> 
+                             
+                            <table class="es-header" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td class="es-adaptive" align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-header-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#3D5CA3;" width="600" cellspacing="0" cellpadding="0" bgcolor="#3d5ca3" align="center"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="Margin:0;padding-top:15px;padding-bottom:20px;padding-left:20px;padding-right:20px;background-color:#3D5CA3;background-position:left top;" bgcolor="#3d5ca3" align="left"> 
+                                    <!--[if mso]><table width="560" cellpadding="0" 
+                                             cellspacing="0"><tr><td width="270" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td class="es-m-p20b" width="270" align="left" style="padding:0;Margin:0;"> 
+                                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-position:left top;" width="100%" cellspacing="0" cellpadding="0"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="left" style="padding:0;Margin:0;padding-top:25px;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:31px;font-family:georgia, times, 'times new roman', serif;line-height:47px;color:#FBF5F5;"><em>Special Promotions</em></p> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td></tr></table><![endif]--> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="padding:0;Margin:0;background-color:#CFEBEA;background-position:left top;" bgcolor="#cfebea" align="left"> 
+                                    <!--[if mso]><table width="600" cellpadding="0" 
+                                             cellspacing="0"><tr><td width="260" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td class="es-m-p20b" width="260" align="left" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;"> <img class="adapt-img" src="https://apartmenthacker.com/wp-content/uploads/2012/03/Apartment-Leasing-Commissions.png" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" width="260"></td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td><td width="10"></td><td width="330" valign="top"><![endif]--> 
+                                    <table class="es-right" cellspacing="0" cellpadding="0" align="right" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="330" align="left" style="padding:0;Margin:0;"> 
+                                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;background-position:left top;" width="100%" cellspacing="0" cellpadding="0" bgcolor="transparent"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="left" style="Margin:0;padding-bottom:10px;padding-left:20px;padding-right:30px;padding-top:40px;"> <h1 style="Margin:0;line-height:36px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:30px;font-style:normal;font-weight:normal;color:#333333;"><strong>Commission Fees</strong></h1> </td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td style="padding:0;Margin:0;"> 
+                                            <table class="es-table-not-adapt" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="left" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:20px;"> <i class="fa fa-check" style="font-size:24px;color:#19b9e7;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                               <td align="left" style="padding:0;Margin:0;"> 
+                                                <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                                  <tr style="border-collapse:collapse;"> 
+                                                   <td align="left" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">6 months commission-free period</p> </td> 
+                                                  </tr> 
+                                                </table> </td> 
+                                              </tr> 
+                                            </table> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td></tr></table><![endif]--> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px;background-color:#F7C052;background-position:left top;" bgcolor="#f7c052" align="left"> 
+                                    <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="560" valign="top" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="left" style="padding:0;Margin:0;"> <h2 style="Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#FFFFFF;">Ads &amp; Promotions</h2> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#EEEEEE;" width="600" cellspacing="0" cellpadding="0" bgcolor="#eeeeee" align="center"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="padding:0;Margin:0;background-position:left top;" align="left"> 
+                                    <!--[if mso]><table width="600" cellpadding="0" cellspacing="0"><tr><td width="300" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="300" align="left" style="padding:0;Margin:0;"> 
+                                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;" width="100%" cellspacing="0" cellpadding="0" bgcolor="transparent"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="left" style="Margin:0;padding-bottom:10px;padding-top:15px;padding-left:20px;padding-right:30px;"> <h1 style="Margin:0;line-height:36px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:30px;font-style:normal;font-weight:normal;color:#333333;"><strong>Advertising</strong><br></h1> </td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td style="padding:0;Margin:0;"> 
+                                            <table class="es-table-not-adapt" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="left" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:20px;"> <i class="fa fa-check" style="font-size:24px;color:#19b9e7;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                               <td align="left" style="padding:0;Margin:0;"> 
+                                                <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                                  <tr style="border-collapse:collapse;"> 
+                                                   <td align="left" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">6 months free ฿1,000 monthly ad credits</p> </td> 
+                                                  </tr> 
+                                                </table> </td> 
+                                              </tr> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="left" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:20px;"> <i class="fa fa-check" style="font-size:24px;color:#19b9e7;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                               <td align="left" style="padding:0;Margin:0;"> 
+                                                <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                                  <tr style="border-collapse:collapse;"> 
+                                                   <td align="left" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">Get Official ad placements on feed<br></p> </td> 
+                                                  </tr> 
+                                                </table> </td> 
+                                              </tr> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="left" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:20px;"> <i class="fa fa-check" style="font-size:24px;color:#19b9e7;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                               <td align="left" style="padding:0;Margin:0;"> 
+                                                <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                                  <tr style="border-collapse:collapse;"> 
+                                                   <td align="left" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">Get special offer for platform events<br></p> </td> 
+                                                  </tr> 
+                                                </table> </td> 
+                                              </tr> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="left" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:20px;"> <i class="fa fa-check" style="font-size:24px;color:#19b9e7;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                               <td align="left" style="padding:0;Margin:0;"> 
+                                                <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                                  <tr style="border-collapse:collapse;"> 
+                                                   <td align="left" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">Get special offer for platform campaigns</p> </td> 
+                                                  </tr> 
+                                                </table> </td> 
+                                              </tr> 
+                                            </table> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td><td width="0"></td><td width="300" valign="top"><![endif]--> 
+                                    <table class="es-right" cellspacing="0" cellpadding="0" align="right" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="300" align="left" style="padding:0;Margin:0;"> 
+                                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-position:left top;" width="100%" cellspacing="0" cellpadding="0"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;"> <img class="adapt-img product-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4ScPSST1p9VdZZdXkmJU9ziax19YE_2OMlKZcUP4hiDGUoqdxag" alt="Accredited Online Colleges" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" title="Accredited Online Colleges" width="300" height="220"></td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td></tr></table><![endif]--> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px;background-color:#F7C052;" bgcolor="#f7c052" align="left"> 
+                                    <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="560" valign="top" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="left" style="padding:0;Margin:0;"> <h2 style="Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#FFFFFF;">Refer and Earn<br></h2> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#EEEEEE;" width="600" cellspacing="0" cellpadding="0" bgcolor="#eeeeee" align="center"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="padding:0;Margin:0;background-position:left top;" align="left"> 
+                                    <!--[if mso]><table dir="rtl" width="600" cellpadding="0" cellspacing="0"><tr><td dir="ltr" width="300" valign="top"><![endif]--> 
+                                    <table class="es-right" cellspacing="0" cellpadding="0" align="right" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="300" align="left" style="padding:0;Margin:0;"> 
+                                        <table style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;background-position:left top;" width="100%" cellspacing="0" cellpadding="0" bgcolor="transparent"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="left" style="Margin:0;padding-bottom:10px;padding-left:20px;padding-right:30px;padding-top:40px;"> <h1 style="Margin:0;line-height:36px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:30px;font-style:normal;font-weight:normal;color:#333333;"><strong>Referral Rewards</strong></h1> </td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td style="padding:0;Margin:0;"> 
+                                            <table class="es-table-not-adapt" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="left" style="Margin:0;padding-top:5px;padding-bottom:5px;padding-right:10px;padding-left:20px;">  <i class="fa fa-check" style="font-size:24px;color:#19b9e7;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                               <td align="left" style="padding:0;Margin:0;"> 
+                                                <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                                  <tr style="border-collapse:collapse;"> 
+                                                   <td align="left" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;">Referral ฿50 cash voucher</p> </td> 
+                                                  </tr> 
+                                                </table> </td> 
+                                              </tr> 
+                                            </table> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td><td dir="ltr" width="0"></td><td dir="ltr" width="300" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="300" align="left" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;"> <img class="adapt-img" src="https://www.uniqueindoor.com/wp-content/uploads/2016/03/Libertyville-Unique-Indoor-Comfort-Heating-and-Cooling-HVAC-Referral-Reward-Program2.jpg" alt="Most Affordable" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" title="Most Affordable" width="300"></td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td></tr></table><![endif]--> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td style="Margin:0;padding-left:10px;padding-right:10px;padding-top:15px;padding-bottom:15px;background-color:#F7C052;background-position:left top;" bgcolor="#f7c052" align="left"> 
+                                    <!--[if mso]><table width="580" cellpadding="0" 
+                                                 cellspacing="0"><tr><td width="202" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td class="es-m-p0r es-m-p20b" width="182" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;padding-bottom:5px;"><i class="fa fa-map-marker" style="color:white;font-size:36px;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;padding-left:5px;padding-right:5px;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:24px;color:#FFFFFF;">589 Rama III,Yan Nawa,Bangkok 10120<br></p> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                       <td class="es-hidden" width="20" style="padding:0;Margin:0;"></td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td><td width="179" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td class="es-m-p20b" width="179" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;padding-bottom:5px;"><i class="fa fa-envelope-o" style="color:white;font-size:36px;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td esdev-links-color="#ffffff" align="center" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#FFFFFF;"><a target="_blank" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:18px;text-decoration:underline;color:#FFFFFF;" href="mailto:info@name.com">oneapp@traceon.co.th</a></p> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td><td width="20"></td><td width="179" valign="top"><![endif]--> 
+                                    <table class="es-right" cellspacing="0" cellpadding="0" align="right" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="179" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;padding-bottom:5px;"> <i class="fa fa-phone" style="color:white;font-size:36px;display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></i></td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:24px;color:#FFFFFF;">1-800-123-45-67</p><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:16px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:24px;color:#FFFFFF;">1-800-987-65-43</p> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td></tr></table><![endif]--> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-footer" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-footer-body" width="600" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td align="left" style="padding:0;Margin:0;padding-left:10px;padding-right:10px;padding-top:20px;"> 
+                                    <!--[if mso]><table width="580" cellpadding="0"
+                                                 cellspacing="0"><tr><td width="190" valign="top"><![endif]--> 
+                                    <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td class="es-m-p0r es-m-p20b" width="190" valign="top" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td class="es-m-txt-c" esdev-links-color="#666666" align="right" style="padding:0;Margin:0;padding-top:5px;"> <h4 style="Margin:0;line-height:120%;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;color:#666666;">Follow us:</h4> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td><td width="20"></td><td width="370" valign="top"><![endif]--> 
+                                    <table cellspacing="0" cellpadding="0" align="right" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="370" align="left" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;"> 
+                                            <table class="es-table-not-adapt es-social" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                              <tr style="border-collapse:collapse;"> 
+                                               <td valign="top" align="center" style="padding:0;Margin:0;padding-right:15px;"> <img title="Facebook" src="https://nvtmj.stripocdn.email/content/assets/img/social-icons/rounded-gray/facebook-rounded-gray.png" alt="Fb" width="32" height="32" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></td> 
+                                               <td valign="top" align="center" style="padding:0;Margin:0;padding-right:15px;"> <img title="Twitter" src="https://nvtmj.stripocdn.email/content/assets/img/social-icons/rounded-gray/twitter-rounded-gray.png" alt="Tw" width="32" height="32" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></td> 
+                                               <td valign="top" align="center" style="padding:0;Margin:0;padding-right:15px;"> <img title="Instagram" src="https://nvtmj.stripocdn.email/content/assets/img/social-icons/rounded-gray/instagram-rounded-gray.png" alt="Inst" width="32" height="32" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></td> 
+                                               <td valign="top" align="center" style="padding:0;Margin:0;padding-right:15px;"> <img title="Youtube" src="https://nvtmj.stripocdn.email/content/assets/img/social-icons/rounded-gray/youtube-rounded-gray.png" alt="Yt" width="32" height="32" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></td> 
+                                               <td valign="top" align="center" style="padding:0;Margin:0;padding-right:15px;"> <img title="Linkedin" src="https://nvtmj.stripocdn.email/content/assets/img/social-icons/rounded-gray/linkedin-rounded-gray.png" alt="In" width="32" height="32" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></td> 
+                                               <td valign="top" align="center" style="padding:0;Margin:0;padding-right:10px;"> <img title="Pinterest" src="https://nvtmj.stripocdn.email/content/assets/img/social-icons/rounded-gray/pinterest-rounded-gray.png" alt="P" width="32" height="32" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></td> 
+                                              </tr> 
+                                            </table> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> 
+                                    <!--[if mso]></td></tr></table><![endif]--> </td> 
+                                  </tr> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td align="left" style="Margin:0;padding-top:5px;padding-bottom:10px;padding-left:10px;padding-right:10px;"> 
+                                    <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="580" valign="top" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;padding-top:5px;padding-bottom:10px;"> <h5 style="Margin:0;line-height:120%;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;color:#666666;">Contact us: 1-800-123-45-67 |oneapp@traceon.co.th<a target="_blank" href="mailto:info@name.com" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:12px;text-decoration:underline;color:#666666;"></a><br></h5> </td> 
+                                          </tr> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td align="center" style="padding:0;Margin:0;"> <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:12px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;color:#666666;">This daily newsletter was sent to <a target="_blank" href="mailto:info@name.com" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:12px;text-decoration:underline;color:#666666;"></a>oneapp@traceon.co.th from company name because you subscribed.<br></p><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-size:12px;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;color:#666666;">If you would not like to receive this email <a target="_blank" href="https://esputnik.com/unsubscribe" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:12px;text-decoration:underline;color:#666666;">unsubscribe here</a>.</p> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> 
+                            <table class="es-content" cellspacing="0" cellpadding="0" align="center" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;"> 
+                              <tr style="border-collapse:collapse;"> 
+                               <td align="center" style="padding:0;Margin:0;"> 
+                                <table class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center"> 
+                                  <tr style="border-collapse:collapse;"> 
+                                   <td align="left" style="Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px;"> 
+                                    <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                      <tr style="border-collapse:collapse;"> 
+                                       <td width="560" valign="top" align="center" style="padding:0;Margin:0;"> 
+                                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
+                                          <tr style="border-collapse:collapse;"> 
+                                           <td class="es-infoblock" align="center" style="padding:0;Margin:0;line-height:13px;font-size:11px;color:#999999;"> <a target="_blank" href="http://viewstripo.email/?utm_source=templates&utm_medium=email&utm_campaign=education&utm_content=promo_newsletter" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:11px;text-decoration:underline;color:#3D5CA3;"> <img src="http://www.traceon.co.th/uploads/config/20150723/adilruxy0457.png" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" width="125"> </a> </td> 
+                                          </tr> 
+                                        </table> </td> 
+                                      </tr> 
+                                    </table> </td> 
+                                  </tr> 
+                                </table> </td> 
+                              </tr> 
+                            </table> </td> 
+                          </tr> 
+                        </table> 
+                      <!-- ---------------------------------------------------------------------------------- -->
+
+                    </td>
+                </tr>
+              
+
+             
+                <!-- 1 Column Text + Button : BEGIN -->
+                 <!-- 2 Even Columns : BEGIN -->
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                        	<tr>
+	                            <td style="text-align: center; padding: 30px 40px 20px 40px; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+	                               <% if (locals.outro) { %>
+                                        <% outro.forEach(function (outroItem) { -%>
+                                            <p><%- outroItem %></p>
+                                        <% }) -%>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <tr>
+	                            <td style="text-align: center; padding: 0 40px 40px 40px; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+	                                <%- signature %>,
+                                    <br />
+                                    <%- product.name %>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- Two Even Columns : END -->
+
+            </table>
+            <!-- Email Body : END -->
+
+            <!-- Email Footer : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
+                <tr>
+                    <td class="copyright" style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888;">
+                        <%- product.copyright %>
+                    </td>
+                </tr>
+            </table>
+            <!-- Email Footer : END -->
+
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </div>
+    </center>
+
+<!-- Support for Gmail Go-To Actions -->
+<% if (locals.goToAction) { %>
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "EmailMessage",
+        "potentialAction": {
+            "@type": "ViewAction",
+            "url": "<%- goToAction.link %>",
+            "target": "<%- goToAction.link %>",
+            "name": "<%- goToAction.text %>"
+        },
+        "description": "<%- goToAction.description %>"
+    }
+    </script>
+<% } %>
+<div class="es-wrapper-color" style="background-color:#F7F7F7;"> 
+   <!--[if gte mso 9]>
+			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+				<v:fill type="tile" color="#f7f7f7"></v:fill>
+			</v:background>
+		<![endif]--> 
+  
+  </div>  
+</body>
+</html>
